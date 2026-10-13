@@ -1,0 +1,12 @@
+# Core pipeline (fetching + filtering + enrichment via the live DDOT LRS API)
+# uses only the Python standard library - no install required for that path.
+#
+# This file is here so `pip install -r requirements.txt` is a no-op/clean
+# success out of the box, and so the optional pieces below are documented
+# in one place.
+
+# Optional: only needed if you set config.USE_QGIS_FALLBACK = True, or want
+# the automatic PyQGIS fallback for any points the live API can't resolve.
+# PyQGIS itself (the `qgis` package) is NOT pip-installable - it ships with
+# a QGIS Desktop/Server install. See README.md "QGIS fallback" for setup.
+# No extra pip packages are required beyond what QGIS already bundles.
