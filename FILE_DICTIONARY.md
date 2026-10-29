@@ -34,7 +34,7 @@ enriches it.)
 | File | Lines | Purpose |
 |---|---|---|
 | `README.md` | 244 | The primary how-to-run reference: quick start, the config variables worth knowing about, a full column-by-column reference for the output CSV, the methodology/data-exploration notes (why `ApplicantCompany` not `PermitteeName`, why `TrackingNumber` not `PermitNumber`, the alley/driveway/ramp functional-class gap, etc.), QGIS fallback setup, project layout, and known limitations. |
-| `REPORT.md` | 185 | A narrative summary written for the Associate Director: objective, data sources, methodology and the reasoning behind each choice, results with real numbers from the delivered CSV, issues encountered during development (and how they were fixed), a full missing/N-A data census with explanations, and limitations. |
+| `REPORT.md` | 204 | A narrative summary written for the Associate Director: objective, data sources, methodology and the reasoning behind each choice, results with real numbers from the delivered CSV, issues encountered during development (and how they were fixed), a full missing/N-A data census with explanations, and limitations. |
 | `FILE_DICTIONARY.md` | — | This file. |
 
 ## Generated output (produced by running `run.py`, not hand-edited)
