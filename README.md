@@ -50,23 +50,27 @@ spent waiting on the LRS API.
 
 ### Results from the included CSV
 
-The CSV in `output/` is a real run against the live data on 2026-10-13, not
+The CSV in `output/` is a real run against the live data on 2026-10-29, not
 a sample/mock. For reference:
 
-- 3,648 permit locations, across 2,482 distinct permit applications
+- 3,689 permit locations, across 2,544 distinct permit applications
   (`TrackingNumber`), for DC Water / PEPCO / Washington Gas Construction
-  Staging Area permits from CY2026 to date (see the Mobile Crane Work Zone
-  note above for why that type has zero rows).
-- 3,647 of 3,648 locations (99.97%) resolved to a roadway functional class;
-  3,538 on the fast nearest-only lookup, 109 needed the escalated/alley-
+  Staging Area permits (see the Mobile Crane Work Zone note above for why
+  that type has zero rows). Application dates run from 2026-03-17 to
+  2026-10-28: the feed appears to keep only recent/active permits and drop
+  older ones as they expire or close out, so this is not a complete CY2026
+  record. See `output/changes_2026-10-13_to_2026-10-29/` for what changed
+  since the previous (2026-10-13) run.
+- 3,688 of 3,689 locations (99.97%) resolved to a roadway functional class;
+  3,596 on the fast nearest-only lookup, 92 needed the escalated/alley-
   avoiding fallback. The 1 unresolved location is a real edge case
   (1900 Massachusetts Avenue SE) sitting inside a cluster of driveways with
   no classified public street within the 200m search limit - it's in the
   CSV with a blank functional class and `FunctionalClassMatchMethod=none`
   rather than silently dropped.
-- Location-level functional class distribution: Local 2,015; Minor
-  Arterial 679; Major Collector 571; Principal Arterial 286; Minor
-  Collector 89; Interstate 7.
+- Location-level functional class distribution: Local 2,072; Minor
+  Arterial 672; Major Collector 581; Principal Arterial 285; Minor
+  Collector 71; Interstate 7.
 
 ## Configuring a run
 
