@@ -3,7 +3,7 @@
 **PSO Permit Functional Class Enrichment — Calendar Year 2026**
 Prepared for: Associate Director, Public Space Division
 Prepared by: Fulton Q. Shannon
-Run date: 2026-10-13
+Run date: 2026-10-29 (first delivered 2026-10-13)
 
 ---
 
@@ -60,8 +60,8 @@ rather than assumed. Both API feeds are public and unauthenticated.
   would still be caught.
 - **Grouping key for the permit-level rollup**: `TrackingNumber`, not
   `PermitNumber`. `PermitNumber` is only assigned once a permit is
-  actually issued — in this dataset, 1,815 of 3,648 location rows (1,216
-  of 2,482 permits, 49%) are still mid-workflow (Approved/Pending Payment,
+  actually issued — in this dataset, 1,850 of 3,689 location rows (1,238
+  of 2,544 permits, 49%) are still mid-workflow (Approved/Pending Payment,
   Not Paid, Assigned, Resubmit, etc.) and have no `PermitNumber` yet.
   Since the request explicitly wants applications *or* issued permits
   included, grouping on a field that's frequently null would be wrong.
@@ -101,7 +101,7 @@ DC/FHWA functional class hierarchy (Interstate > Other Freeway/Expressway
 > Local), pulled from the same coded-value domain published on the
 Roadway SubBlock layer. This was independently re-verified against the
 delivered CSV: recomputing the rollup from scratch and comparing against
-every row produced **zero mismatches** across all 2,482 permits, and the
+every row produced **zero mismatches** across all 2,544 permits, and the
 value is identical across every row sharing a permit.
 
 ### 3.4 Why the Live API Over the Local/QGIS Approach
@@ -118,19 +118,29 @@ location in this run and reported the outcome rather than failing the run.
 
 ## 4. Results
 
-- **3,648 permit location rows**, covering **2,482 distinct permit
+- **3,689 permit location rows**, covering **2,544 distinct permit
   applications**, for Construction Staging Area permits filed by DC Water
-  (1,887 rows), Washington Gas (1,666), and PEPCO (95), CY2026 to date.
-- **542 permits (22%) have more than one roadway location** attached
-  (up to 16 on a single permit; average 1.47 locations/permit) — these
+  (1,874 rows), Washington Gas (1,717), and PEPCO (98). Application dates
+  run from 2026-03-17 to 2026-10-28 — see §7 on why this is not a complete
+  CY2026 record.
+- **525 permits (21%) have more than one roadway location** attached
+  (up to 16 on a single permit; average 1.45 locations/permit) — these
   are exactly the cases the data request flagged, and each location is
   its own CSV row with the shared permit's highest class also shown.
-- **Functional class resolved for 3,647 of 3,648 locations (99.97%)**:
-  3,538 via the fast nearest-match lookup, 109 via the escalated
+- **Functional class resolved for 3,688 of 3,689 locations (99.97%)**:
+  3,596 via the fast nearest-match lookup, 92 via the escalated
   alley/driveway-avoiding fallback.
-- Location-level functional class distribution: Local 2,015; Minor
-  Arterial 679; Major Collector 571; Principal Arterial 286; Minor
-  Collector 89; Interstate 7.
+- Location-level functional class distribution: Local 2,072; Minor
+  Arterial 672; Major Collector 581; Principal Arterial 285; Minor
+  Collector 71; Interstate 7.
+- **Changes since the 2026-10-13 run** (full detail in
+  `output/changes_2026-10-13_to_2026-10-29/`): 601 locations added (almost
+  all October applications), 558 no longer returned by the feed (mostly
+  June/July permits since expired or not paid), and 1,026 updated in place
+  — mainly status changes and newly issued permit numbers. 7 intersection
+  locations now match the cross street rather than the main road and
+  dropped functional class (e.g. Wisconsin Ave & S St NW: Principal
+  Arterial → Local).
 
 ## 5. Issues Encountered
 
@@ -158,11 +168,11 @@ location in this run and reported the outcome rather than failing the run.
 
 | Field | Blank rate | Explanation |
 |---|---|---|
-| `PermitNumber`, `IssueDate` | 1,815 / 3,648 rows (49.8%) | Permit hasn't been issued yet — these are in-progress applications (Approved/Pending Payment, Not Paid, Assigned, Resubmit, etc.), which the data request explicitly asked to include. Not a data error. |
-| `WorkLocationANC`, `WorkLocationZip` | 3,201 / 3,648 rows (87.7%) | Confirmed this is a **source-system data quality gap**, not something introduced by this pipeline — the same ~83% blank rate holds across the *entire* permit layer regardless of filters (checked against all 7,199 CY2026 Construction Staging/Mobile Crane records, both utility and non-utility). Worth flagging to DDOT's data team separately. |
-| `WorkLocationWard` | 105 / 3,648 rows (2.9%) | Same upstream sparsity, smaller rate. |
-| `LocationFunctionalClass` (and the 6 related columns) | 1 / 3,648 rows (0.03%) | One permit location (TrackingNumber 11229770, 1900 Massachusetts Avenue SE) sits inside a cluster of driveways with no classified public street within the 200m search limit — a genuine "no roadway nearby" case, not a lookup failure. Left in the CSV rather than dropped, flagged via `FunctionalClassMatchMethod=none`. |
-| Mobile Crane Work Zone permits | 0 of 3,648 rows | **Not missing data** — verified directly: all 256 CY2026 Mobile Crane Work Zone permit-locations list a crane operator or permit expediter (e.g. "Metropolitan Permit Services," "Safe Lane Solutions") as `ApplicantCompany`, never DC Water/PEPCO/Washington Gas. Flagging for the AD: if utility crane work is expected here, it may be filed under a contractor's name in this system rather than the utility's, which an `ApplicantCompany`-based filter can't surface. |
+| `PermitNumber`, `IssueDate` | 1,850 / 3,689 rows (50.1%) | Permit hasn't been issued yet — these are in-progress applications (Approved/Pending Payment, Not Paid, Assigned, Resubmit, etc.), which the data request explicitly asked to include. Not a data error. |
+| `WorkLocationANC`, `WorkLocationZip` | 3,186 / 3,689 rows (86.4%) (Zip: 3,187) | Confirmed this is a **source-system data quality gap**, not something introduced by this pipeline — the same ~83% blank rate holds across the *entire* permit layer regardless of filters (checked against all 7,385 CY2026 Construction Staging/Mobile Crane records, both utility and non-utility). Worth flagging to DDOT's data team separately. |
+| `WorkLocationWard` | 107 / 3,689 rows (2.9%) | Same upstream sparsity, smaller rate. |
+| `LocationFunctionalClass` (and the 6 related columns) | 1 / 3,689 rows (0.03%) | One permit location (TrackingNumber 11229770, 1900 Massachusetts Avenue SE) sits inside a cluster of driveways with no classified public street within the 200m search limit — a genuine "no roadway nearby" case, not a lookup failure. Left in the CSV rather than dropped, flagged via `FunctionalClassMatchMethod=none`. |
+| Mobile Crane Work Zone permits | 0 of 3,689 rows | **Not missing data** — verified directly: none of the 305 CY2026 Mobile Crane Work Zone permit-locations list DC Water/PEPCO/Washington Gas as `ApplicantCompany`. 158 list a crane operator or permit expediter (e.g. "Metropolitan Permit Services," "Safe Lane Solutions"); the other 147 have `ApplicantCompany` recorded as "N/A". Flagging for the AD: if utility crane work is expected here, it may be filed under a contractor's name in this system rather than the utility's, which an `ApplicantCompany`-based filter can't surface. |
 
 ## 7. Limitations
 
@@ -175,11 +185,20 @@ location in this run and reported the outcome rather than failing the run.
 - `ApplicantCompany` is the best available proxy for "which utility this
   permit is for," but it's whoever filed the application, not a verified
   ownership/utility-assignment field — see the Mobile Crane note above.
+- The permit feed appears to keep only recent/active permits: 337 permits
+  in the 2026-10-13 run (mostly June/July applications since expired or
+  not paid) were no longer returned on 2026-10-29, even though they still
+  meet the date filter, and no utility permit applied for before
+  2026-03-17 appears in either run. Each run is therefore a snapshot of
+  what the feed currently holds, not a complete CY2026 record; ask DDOT
+  whether an archive/historical layer exists if the full year is needed.
 
 ## 8. Deliverables
 
 - `run.py`, `config.py`, `pso_enrichment/` — full pipeline source
 - `output/PSO_Permits_2026_FunctionalClass_Enriched.csv` — the enriched
   dataset described above
+- `output/changes_2026-10-13_to_2026-10-29/` — added, removed, and
+  changed rows between the 2026-10-13 and 2026-10-29 runs
 - `README.md` — setup/run instructions and field reference
 - `REPORT.md` — this document
