@@ -1,4 +1,4 @@
-Run completed: 2026-10-13T15:31:36
-Permit locations written: 3648
-Distinct permits: 2482
+Run completed: 2026-10-29T11:24:49
+Permit locations written: 3689
+Distinct permits: 2544
 Locations with no resolved functional class: 1
